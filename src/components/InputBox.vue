@@ -1,12 +1,24 @@
 <template>
   <div @click="$emit('input')" class="input-box">
-    <span>输入点什么...</span>
+    <span>说点什么...</span>
+    <div class="question-nav">
+      <transition tag="ul">
+        <li></li>
+      </transition>
+    </div>
+    <div class="question-list"></div>
   </div>
 </template>
 
 <script>
 export default {
-  
+  data() {
+    return {
+      questionType: [
+        []
+      ]
+    }
+  }
 }
 </script>
 

@@ -1,33 +1,42 @@
 <template>
-  <div class="chat-box" :class="location">
+  <div class="chat-box" :class="[location, { 'add-margin': addMargin }]">
     <div class="content">
-      <img v-if="imgSrc" src="" alt="">
-      <span v-html="msg"></span>
+      <template>
+        <img v-if="imgUrl" :src="imgUrl" alt="与中合聊天中的图片">
+        <span v-html="msg"></span>
+      </template>
+      <loading v-if="!msg"/>
     </div>
   </div>
 </template>
 
 <script>
+import Loading from '../base/Loading.vue'
+
 export default {
   name: 'ChatBox',
   props: {
     location: String, // 值必须为left或者right
     msg: String,
-    imgSrc: String,
+    imgUrl: String,
+    addMargin: Boolean,
+  },
+  components: {
+    Loading
   }
 };
 </script>
 
 <style scoped>
   .chat-box {
-    margin: 10px 0;
+    margin-bottom: 10px;
   }
 
   .content > img {
     width: 100%;
   }
 
-  .chat-box > .content {
+  .content {
     position: relative;
     background-color: #fcfcfc;
     padding: .6em;
@@ -73,5 +82,9 @@ export default {
     height: .6em;
     z-index: -1;
     background-color: #42b983;
+  }
+
+  .add-margin {
+    margin-top: 2em;
   }
 </style>
