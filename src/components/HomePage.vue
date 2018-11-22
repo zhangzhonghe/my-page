@@ -9,10 +9,14 @@
           :msg="item.msg"
           :img-url="item.imgUrl"
           :add-margin="item.addMargin"
+          :is-send="item.isSend"
+          :loading-time="item.loadingTime"
+          @success="onSuccess"
+          @next="onNext"
           />
       </transition-group>
     </div>
-    <input-box @input="onInput"/>
+    <input-box @input="onInput" :placeholder="placeholder"/>
   </main>
 </template>
 
@@ -26,6 +30,7 @@ export default {
     return {
       msg: [],
       animationName: 'left',
+      placeholder: '说点什么...'
     }
   },
   components: {
@@ -33,35 +38,59 @@ export default {
     InputBox,
   },
   methods: {
-    onInput() {
-      this.count || (this.count = 0)
-      this.count++
-      this.preLocation || (this.preLocation = 'left')
+    onInput(key, chatData) {
+      if(this.placeholder === '对方正在输入...') return
 
-      const data = {
+      this.chatData = chatData
+
+      const send = {
         id: this.msg.length,
-        location: (this.count % 3 !== 0) ? 'left' : 'right',
-        msg: '你好，我的朋友',
-        // imgUrl: 'https://c1.staticflickr.com/5/4294/36256190276_11b9605c9f_b.jpg',
+        location: 'right',
+        msg: this.chatData.send,
+        imgUrl: '',
+        isSend: true,
+        addMargin: true
       }
+      
+      this.animationName = 'right'
 
-      if (this.preLocation === data.location) {
-        data.addMargin = false
-      } else {
-        data.addMargin = true
-        this.preLocation = data.location
-      }
-
-      this.animationName = data.location
-      this.msg.push(data)
+      this.count = 0 // 用于获取消息
+      this.msg.push(send)
       this._scrollToEnd()
     },
     
+    onNext () {
+      this.placeholder = '对方正在输入...'
+      const item = this.chatData.msg[this.count++]
+      if(!item) {
+        this.placeholder = '说点什么...'
+        return
+      }
+      const msg = {
+        id: this.msg.length,
+        location: 'left',
+        msg: item.text,
+        imgUrl: item.imgurl,
+        addMargin: this.count === 1 ? true : false,
+        isSend: false,
+        loadingTime: item.loadingTime
+      }
+
+      this.animationName = 'left'
+
+      this.msg.push(msg)
+      this._scrollToEnd()
+    },
+
+    onSuccess () {
+      this._scrollToEnd()
+    },
+
     _scrollToEnd () {
       this.$nextTick(() => {
         this.$refs.chats.scrollIntoView({ behavior: 'smooth', block: 'end' })
       })
-    }
+    },
   }
 }
 </script>

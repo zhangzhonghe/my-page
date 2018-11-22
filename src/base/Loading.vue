@@ -27,15 +27,15 @@ export default {
   }
 
   .dot:first-child {
-    animation: dot1 .8s linear infinite alternate;
+    animation: dot1 .6s linear infinite alternate;
   }
 
   .dot:nth-child(2) {
-    animation: dot2 .8s linear .1s infinite alternate;
+    animation: dot2 .6s linear .1s infinite alternate;
   }
 
   .dot:last-child {
-    animation: dot3 .8s linear .2s infinite alternate;
+    animation: dot3 .6s linear .2s infinite alternate;
   }
 
   @keyframes dot1 {
