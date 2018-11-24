@@ -6,8 +6,8 @@ Vue.config.productionTip = false
 
 new Vue({
   created() {
-    this.msg = chat
-    this.currentMsg = chat
+    this.chat = chat
+    this.currentChat = chat.firstMsg
   },
   render: h => h(App),
 }).$mount('#app')
