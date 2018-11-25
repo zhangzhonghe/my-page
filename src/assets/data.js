@@ -322,7 +322,11 @@ export default {
           }
         },
       },
-
+      key4: {
+        send: '......',
+        msg: [],
+        questionList: [],
+      },
     }
   },
 

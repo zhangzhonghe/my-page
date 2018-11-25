@@ -1,5 +1,5 @@
 <template>
-  <main @click="onCloseSideBar" class="home-page" :style="{right: touchMoveX + 'px', transition: addAnimation ? 'all .5s' : ''}">
+  <main @click="onCloseSideBar" ref="main" class="home-page" :style="{right: touchMoveX + 'px', transition: addAnimation ? 'all .5s' : ''}">
     <div
       class="slider"
       @touchstart="onTouchStart"
@@ -131,8 +131,14 @@ export default {
     },
 
     _scrollToEnd () {
+      clearInterval(this.timer) // 防止重复设置定时器
       this.$nextTick(() => {
-        this.$refs.chats.scrollIntoView({ behavior: 'smooth', block: 'end' })
+        const main = this.$refs.main
+        const frame = (main.scrollHeight - main.scrollTop - main.clientHeight) / 10
+        this.timer = setInterval(() => {
+          main.scrollTop += frame
+          if(Math.floor(main.scrollHeight - main.scrollTop) <= main.clientHeight) clearInterval(this.timer)
+        }, 20);
       })
     },
 
@@ -157,7 +163,6 @@ export default {
     bottom: 0;
     background-color: #eee;
     overflow-y: auto;
-    scroll-behavior: smooth;
     z-index: 2;
   }
 

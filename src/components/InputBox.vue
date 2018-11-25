@@ -103,12 +103,12 @@ export default {
   .nav {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: space-around;
     padding: 0 1em 1em;
   }
 
   .nav > div {
-    font-size: .9em;
+    font-size: 1em;
     padding: .5em 1em;
     background-color: #42b983;
     color: #eee;
