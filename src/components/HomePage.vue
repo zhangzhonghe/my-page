@@ -189,6 +189,7 @@ export default {
     bottom: 3em;
     overflow-x: hidden;
     overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
   }
 
   .chat-container > div:first-child {

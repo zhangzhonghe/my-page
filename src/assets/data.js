@@ -8,7 +8,7 @@ export default {
     key1: {
       send: '你好',
       msg: [
-        { "imgurl": "", "text": "你想知道点什么？" },
+        { "imgurl": "http://up.qqjia.com/z/22/tu25819_3.jpg", "text": "聊点什么呢...😎" },
       ],
       questionList: []
     },
