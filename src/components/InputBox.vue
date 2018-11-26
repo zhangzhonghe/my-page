@@ -174,9 +174,11 @@ export default {
     border-bottom: none;
   }
 
+  /* 动画部分 */
+
   .question-enter-active,
   .question-leave-active {
-    transition: all .4s;
+    transition: all 300ms;
   }
 
   .question-enter,

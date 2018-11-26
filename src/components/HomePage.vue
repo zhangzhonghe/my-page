@@ -7,7 +7,7 @@
       @touchend="onTouchEnd"
       @click.stop
       ></div>
-    <div class="chat-container" ref="chats">
+    <div class="chat-container">
       <transition-group :name="animationName" tag="div">
         <chat-box
           v-for="item of msg"
@@ -71,8 +71,15 @@ export default {
       this.animationName = 'right'
 
       this.count = 0 // 用于获取消息
-      this.msg.push(send)
-      this._scrollToEnd()
+
+      // 延迟发送消息，等待输入框动画
+      setTimeout(() => {
+        this.msg.push(send)
+        // 在组件全部渲染完成后执行，以获得准确的scrollHeight
+        this.$nextTick(() => {
+          this._scrollToEnd()
+        })
+      }, 400);
     },
     
     onNext () {
@@ -131,15 +138,15 @@ export default {
     },
 
     _scrollToEnd () {
-      clearInterval(this.timer) // 防止重复设置定时器
-      this.$nextTick(() => {
-        const main = this.$refs.main
-        const frame = (main.scrollHeight - main.scrollTop - main.clientHeight) / 10
-        this.timer = setInterval(() => {
-          main.scrollTop += frame
-          if(Math.floor(main.scrollHeight - main.scrollTop) <= main.clientHeight) clearInterval(this.timer)
-        }, 20);
-      })
+      const main = this.$refs.main
+      this.minFrame = Math.ceil((main.scrollHeight - main.scrollTop - main.clientHeight) / 30) + 5
+      if(main.scrollHeight - main.clientHeight) window.requestAnimationFrame(this._scrollAnimation)
+    },
+
+    _scrollAnimation () {
+      const main = this.$refs.main
+      main.scrollTop += this.minFrame
+      if(Math.floor(main.scrollHeight - main.scrollTop) > main.clientHeight) window.requestAnimationFrame(this._scrollAnimation)
     },
 
     _getLoadingTime (text) {
@@ -162,7 +169,7 @@ export default {
     right: 0;
     bottom: 0;
     background-color: #eee;
-    overflow-y: auto;
+    overflow: hidden auto;
     z-index: 2;
   }
 
@@ -173,7 +180,7 @@ export default {
   /* 动画部分 */
   .left-enter-active,
   .right-enter-active {
-    transition: transform .3s cubic-bezier(.75,1.6,.68,.8);
+    transition: transform 300ms cubic-bezier(.75,1.6,.68,.8);
   }
 
   .left-enter,
