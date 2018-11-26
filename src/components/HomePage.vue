@@ -1,5 +1,5 @@
 <template>
-  <main @click="onCloseSideBar" ref="main" class="home-page" :style="{right: touchMoveX + 'px', transition: addAnimation ? 'all .5s' : ''}">
+  <main @click="onCloseSideBar" class="home-page" :style="{transform: `translateX(-${touchMoveX}px)`, transition: addAnimation ? 'all .5s' : ''}">
     <div
       class="slider"
       @touchstart="onTouchStart"
@@ -7,7 +7,7 @@
       @touchend="onTouchEnd"
       @click.stop
       ></div>
-    <div class="chat-container">
+    <div class="chat-container" ref="chats">
       <transition-group :name="animationName" tag="div">
         <chat-box
           v-for="item of msg"
@@ -138,15 +138,23 @@ export default {
     },
 
     _scrollToEnd () {
-      const main = this.$refs.main
-      this.minFrame = Math.ceil((main.scrollHeight - main.scrollTop - main.clientHeight) / 30) + 5
-      if(main.scrollHeight - main.clientHeight) window.requestAnimationFrame(this._scrollAnimation)
+      clearTimeout(this.timer)
+
+      this.animationLoop = true
+      this.timer = setTimeout(() => {
+        this.animationLoop = false
+      }, 500);
+
+      const chats = this.$refs.chats
+      this.minFrame = Math.ceil((chats.scrollHeight - chats.scrollTop - chats.clientHeight) / 30) + 5
+      if(chats.scrollHeight - chats.clientHeight) this._scrollAnimation()
     },
 
     _scrollAnimation () {
-      const main = this.$refs.main
-      main.scrollTop += this.minFrame
-      if(Math.floor(main.scrollHeight - main.scrollTop) > main.clientHeight) window.requestAnimationFrame(this._scrollAnimation)
+      "use strict";
+      const chats = this.$refs.chats
+      chats.scrollTop += this.minFrame
+      if(this.animationLoop) window.requestAnimationFrame(this._scrollAnimation)
     },
 
     _getLoadingTime (text) {
@@ -164,17 +172,37 @@ export default {
 <style scoped>
   .home-page {
     position: absolute;
-    left: 0;
     top: 0;
+    left: 0;
     right: 0;
     bottom: 0;
     background-color: #eee;
-    overflow: hidden auto;
+    overflow: hidden;
     z-index: 2;
   }
 
   .chat-container {
-    padding: 10px 0 5em;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 3em;
+    overflow-x: hidden;
+    overflow-y: scroll;
+  }
+
+  .chat-container > div:first-child {
+    padding: 1em 0 2em;
+  }
+
+  .slider {
+    position: fixed;
+    width: 2em;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0);
+    z-index: 2;
   }
 
   /* 动画部分 */
@@ -194,15 +222,5 @@ export default {
 
   .right-enter-to {
     transform-origin: top right;
-  }
-
-  .slider {
-    position: fixed;
-    width: 2em;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0);
-    z-index: 2;
   }
 </style>

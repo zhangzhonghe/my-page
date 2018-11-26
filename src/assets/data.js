@@ -3,7 +3,7 @@ export default {
   firstMsg: {
     msg: [
       '', // 第一个元素用不到，是从第二个元素开始取值的
-      { "imgurl": "", "text": "你好，很高兴认识你" },
+      { "imgurl": "", "text": "你好，朋友" },
     ],
     key1: {
       send: '你好',

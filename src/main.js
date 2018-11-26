@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import chat from './assets/data.js'
+import './assets/reset.css'
 
 Vue.config.productionTip = false
 
